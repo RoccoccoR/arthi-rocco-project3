@@ -15,8 +15,6 @@ let maxPage = 0;
 let page = 1;
 let searchQuery = "";
 
-// pagination.textContent = `${page} / ${maxPage}`;
-
 fetchCharacters();
 
 nextButton.addEventListener("click", (event) => {
@@ -64,15 +62,13 @@ async function fetchCharacters() {
   return data;
 }
 
+fetchCharacters();
+
 searchBar.addEventListener("submit", (event) => {
   event.preventDefault();
   const searchInput = event.target.elements["query"];
   searchQuery = searchInput.value;
+  page = 1;
   fetchCharacters();
-  // const data = fetchCharacters();
-  // maxPage = data.info.pages;
-
   searchBar.reset();
 });
-
-fetchCharacters();
