@@ -11,11 +11,11 @@ const nextButton = document.querySelector('[data-js="button-next"]');
 const pagination = document.querySelector('[data-js="pagination"]');
 
 // States
-const maxPage = 42;
+let maxPage = 0;
 let page = 1;
 let searchQuery = "";
 
-pagination.textContent = `${page} / ${maxPage}`;
+// pagination.textContent = `${page} / ${maxPage}`;
 
 fetchCharacters();
 
@@ -25,7 +25,7 @@ nextButton.addEventListener("click", (event) => {
     return;
   }
   page = page + 1;
-  pagination.textContent = `${page} / ${maxPage}`;
+  // pagination.textContent = `${page} / ${maxPage}`;
   fetchCharacters();
 });
 
@@ -35,7 +35,7 @@ prevButton.addEventListener("click", (event) => {
     return;
   }
   page = page - 1;
-  pagination.textContent = `${page} / ${maxPage}`;
+  // pagination.textContent = `${page} / ${maxPage}`;
   fetchCharacters();
 });
 
@@ -43,9 +43,14 @@ async function fetchCharacters() {
   const apiUrl = `https://rickandmortyapi.com/api/character?page=${page}&name=${searchQuery}`;
   const response = await fetch(apiUrl);
   const data = await response.json();
+  if (data.error) {
+    cardContainer.innerHTML = "No characther with that name!";
+  }
+  console.log("data.error", data);
+  maxPage = data.info.pages;
   const characters = data.results;
   cardContainer.innerHTML = "";
-
+  pagination.textContent = `${page} / ${maxPage}`;
   characters.forEach((character) => {
     const characterCard = createCharacterCard(character);
     cardContainer.append(characterCard);
@@ -57,6 +62,7 @@ searchBar.addEventListener("submit", (event) => {
   const searchInput = event.target.elements["query"];
   searchQuery = searchInput.value;
   fetchCharacters();
+  searchBar.reset();
 });
 
 fetchCharacters();
